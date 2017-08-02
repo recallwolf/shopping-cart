@@ -1,0 +1,46 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+td,th{
+	padding: 10px!important;
+	font-size:15px;
+}
+.bgx{
+	background-color: #ecf0f5;
+}
+.bg{
+    width: 50%;
+	display: inline-block;
+	float: left;
+	border-style: solid;
+}
+.bg2{
+	width: 50%;
+	position: fixed;
+	margin-left: 50%;
+	border-bottom-style: solid;
+	border-right-style: solid;
+	border-top-style: solid;
+}
+.text{
+	width: 100px;
+}
+.form_text{
+	width: 50px;
+}
+.image{
+	width: 70px;
+	height: 70px;
+}
+.butt{
+	width: 60px;
+	height: 30px;
+}
+.butta{
+	width: 50%;
+	height: 40px;
+}
+.totalp{
+	margin-left:85%;
+}
