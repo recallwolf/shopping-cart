@@ -13,7 +13,7 @@
 					<thead>
 						<tr>
 							<th>Drink</th>
-							<th>Price</th>					
+							<th>Price</th>		
 							<th>Picture</th>
 						</tr>
 					</thead>
@@ -22,6 +22,7 @@
 							<td><b data-bind="text: name "></b></td>
 							<td><b data-bind="text: price "></b></td>
 							<td><img data-bind="attr: {src: thumb_img}" class="image" ></img></td>
+							<td><button class="butt btn btn-primary" data-bind="click: $parent.addDrink">add</button></td>
 							<td><button class="butt btn btn-primary" data-bind="click: $parent.addDrink">add</button></td>
 						</tr>
 					</tbody>
@@ -45,7 +46,7 @@
 							<td><b data-bind="text: price"></b></td>
 							<td><b data-bind="text: subtotal"></b></td>
 							<td><button class="butt btn btn-primary" data-bind="click: addQuantity">add</button></td>
-							<td><button class="butt btn btn-primary" data-bind="click: $parent.removeDrink">del</button></td>
+							<td><button class="butt btn btn-primary" data-bind="click: $parent.delDrink">del</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -63,6 +64,7 @@
 			self.name = ko.observable(item.name);
 			self.price = ko.observable(item.price);
 			self.quantity = ko.observable(1);
+			self.id = ko.observable(item.id);
 			self.subtotal = ko.computed(
 				function () {
 					return self.price() * self.quantity();
@@ -72,7 +74,12 @@
 			self.addQuantity = function(){
 				self.quantity(self.quantity() + 1);
 			};
-		}
+			/*self.delQuantity = function(item){
+				if(self.quantity() >= 2){
+					self.quantity(self.quantity() - 1);
+				}
+			};*/
+		}	
 		
 		var viewModel = function(){
 			var self = this;
@@ -89,13 +96,25 @@
 				},
 				self
 			);
-			self.addDrink = function () {
-				self.carts.push(new cartModel(this));
+			self.addDrink = function (cart) {
+				var find = self.carts().find(function(value) {
+					return value.id() === cart.id;
+				});
+				if(find != undefined){
+					find.quantity(find.quantity() + 1);
+				}
+				else{
+					self.carts.push(new cartModel(this));
+				}
+			}
+			self.delDrink = function (cart) {
+				if(cart.quantity() >= 2){
+					cart.quantity(cart.quantity() - 1);
+				}
+				else{
+					self.carts.remove(cart);
+				}
 			};
-			self.removeDrink = function (cart) {
-				self.carts.remove(cart);
-			};
-
 		}
 		ko.applyBindings(new viewModel());
 	</script>
