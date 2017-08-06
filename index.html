@@ -23,7 +23,7 @@
 							<td><b data-bind="text: price "></b></td>
 							<td><img data-bind="attr: {src: thumb_img}" class="image" ></img></td>
 							<td><button class="butt btn btn-primary" data-bind="click: $parent.addDrink">add</button></td>
-							<td><button class="butt btn btn-primary" data-bind="click: $parent.addDrink">add</button></td>
+							<td><button class="butt btn btn-primary" data-bind="click: $parent.delDrink">del</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -45,8 +45,8 @@
 							<td><b data-bind="text: quantity"></b></td>
 							<td><b data-bind="text: price"></b></td>
 							<td><b data-bind="text: subtotal"></b></td>
-							<td><button class="butt btn btn-primary" data-bind="click: addQuantity">add</button></td>
-							<td><button class="butt btn btn-primary" data-bind="click: $parent.delDrink">del</button></td>
+							<td><button class="butt btn btn-primary" data-bind="click: $parent.addQuantity">add</button></td>
+							<td><button class="butt btn btn-primary" data-bind="click: $parent.delQuantity">del</button></td>
 						</tr>
 					</tbody>
 				</table>
@@ -71,9 +71,6 @@
 				},
 				self
 			);
-			self.addQuantity = function(){
-				self.quantity(self.quantity() + 1);
-			};
 			/*self.delQuantity = function(item){
 				if(self.quantity() >= 2){
 					self.quantity(self.quantity() - 1);
@@ -81,10 +78,11 @@
 			};*/
 		}	
 		
-		var viewModel = function(){
+		var viewModel = function(data){
 			var self = this;
 			self.chosendrink = ko.observableArray(data);
 			self.carts = ko.observableArray();
+			self.quantity = ko.observable(0)
 			self.totalPrice = ko.computed(function () {
 				var total = 0;
 				$.each(self.carts(),
@@ -96,6 +94,20 @@
 				},
 				self
 			);
+			/*self.num = ko.computed(function(){
+				for(var x in self.chosendrink()){
+					var find = self.carts().find(function(value) {
+						return value.id() === self.chosendrink()[x].id;
+					});
+					if(find != undefined){
+						return find.quantity();
+					}
+					else{
+						return 0;
+					}
+				}
+			}
+			);*/
 			self.addDrink = function (cart) {
 				var find = self.carts().find(function(value) {
 					return value.id() === cart.id;
@@ -107,7 +119,21 @@
 					self.carts.push(new cartModel(this));
 				}
 			}
-			self.delDrink = function (cart) {
+			self.delDrink = function(cart){
+				var find = self.carts().find(function(value) {
+					return value.id() === cart.id;
+				});
+				if(find.quantity() >= 2){
+					find.quantity(find.quantity() - 1);
+				}
+				else{
+					self.carts.remove(find);
+				}
+			}
+			self.addQuantity = function(cart){
+				cart.quantity(cart.quantity() + 1);
+			};
+			self.delQuantity = function (cart) {
 				if(cart.quantity() >= 2){
 					cart.quantity(cart.quantity() - 1);
 				}
@@ -116,6 +142,6 @@
 				}
 			};
 		}
-		ko.applyBindings(new viewModel());
+		ko.applyBindings(new viewModel(data));
 	</script>
 </html>
